@@ -131,7 +131,7 @@ main#Snotificacoes .header button, main#mainNotific .header button {
     width: 3svh;
     height: 3svh;
 
-    background-image: url(../../assets/icones/trashfull.svg);
+    background-image: url(assets/icones/trashfull.svg);
     background-size: cover;
     background-color: transparent;
     border: 0;
@@ -141,7 +141,7 @@ main#Snotificacoes .header button, main#mainNotific .header button {
     width: var(--min-size);
     height: var(--min-size);
 
-    background-image: url(../../assets/icones/irNotificacao.svg);
+    background-image: url(assets/icones/irNotificacao.svg);
     background-size: cover;
     background-color: transparent;
     border: 0;

@@ -70,7 +70,7 @@ function carregarTodasNotificacoes(arrayEmpresa) {
             });
 
             sectionNot.innerHTML = `<div class='hr'><span>${arrayEmpresa[i].titulo}</span>
-                                    <a class="irHistorico" onclick="localStorage.setItem('poste', ${i})" href="./historico.html" target="_blank"></a></div>
+                                    <a class="irHistorico" href="./historico/${i}" target="_blank"></a></div>
                                     ${sectionNot.innerHTML}`;
         }
     }

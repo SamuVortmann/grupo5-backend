@@ -92,7 +92,7 @@ class Poste {
                     <p>Empresas associadas: ${Object.keys(this.associadas)}</p>
 
 
-                    <a href="./historico/${this._localId}" onclick="localStorage.setItem('poste', ${this._localId})" target="_blank">Histórico de notificações</a>
+                    <a href="./historico/${this._localId}" target="_blank">Histórico de notificações</a>
                     <div class="setStatus">
                         <p onclick=" empresa_logada.__postes[${this._localId}].setStatus(0); recarregarForcado.click();">set Desativo</p>
                         <p onclick="empresa_logada.__postes[${this._localId}].setStatus(1); recarregarForcado.click();">set Ativo</p>
