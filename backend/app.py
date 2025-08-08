@@ -1,5 +1,5 @@
 from flask import Flask, render_template, request, url_for, session
-import env
+import env, time
 
 app = Flask(__name__)
 app.config.from_object(env)
@@ -30,7 +30,9 @@ def registrarFuncionarios():
 # daqui pra baixo é apenas com validação!
 @app.route('/mapa')
 def mapa():
-    return render_template('mapa.html', API_KEY=app.config['API_MAPS'])
+
+    versao = int(time.time())
+    return render_template('mapa.html', API_KEY=app.config['API_MAPS'], versao=versao)
 
 @app.route('/notificacoes')
 def notificacoes():
