@@ -45,7 +45,7 @@ async function initMap() {
         let title = infos.title;
         
         const image = document.createElement("img");
-        image.src = "../assets/icones/lampada.svg";
+        image.src = "../static/assets/icones/lampada.svg";
         image.style.width = '28px';
         image.style.height = '28px';
         

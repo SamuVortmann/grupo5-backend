@@ -94,7 +94,7 @@ function acharPostePeloID(idTotal) {
 // Como é só pra ver os postes da empresa logada, utilizaria um idLocal pra pegar da lista de postes (da empresa logada)
 function handleChangePoste(nome) {
     let idOf = parseInt(nome.slice(nome.indexOf('#')+1)-1);
-    pegarPoste(empresa_logada.__postes[idOf]);
+    changeURL('/historico/', idOf)
 }
 
 function pegarPoste(poste) { // Objeto poste
@@ -114,11 +114,10 @@ function pegarPoste(poste) { // Objeto poste
 listarArrayEmElement(nomePoste, 'option', empresa_logada.__postes);
 
 
-let postePegado = localStorage.getItem('poste');
+let postePegado = window.location.href.split('historico/')[1]
 
 if (postePegado == '' || postePegado == null || postePegado == 'null') {
     pegarPoste(empresa_logada.__postes[0])
 } else {
     pegarPoste(empresa_logada.__postes[parseInt(postePegado)])
 };
-localStorage.setItem('poste', '');

@@ -89,3 +89,7 @@ function removeItemDeArray(item, array) {
 function converterParaJSON(objeto) {
     return JSON.parse(JSON.stringify(objeto));
 }
+
+function changeURL(split, change) {
+    window.location.href = `${window.location.href.split(split)[0] + split + change}`
+}

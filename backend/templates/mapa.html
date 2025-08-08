@@ -5,47 +5,47 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Mapa</title>
 
-    <link rel="stylesheet" href="css/main.css">
+    <link rel="stylesheet" href="../static/main.css">
 
-    <script src="script/objetos.js"></script>
-    <script src="script/main.js" defer></script>
-    <script src="script/debug.js" defer></script>
+    <script src="../static/script/objetos.js"></script>
+    <script src="../static/script/main.js" defer></script>
+    <script src="../static/script/debug.js" defer></script>
     
-    <script src="script/maps.js" defer></script>
+    <script src="../static/script/maps.js" defer></script>
 </head>
 <body id="maps">
     <div id="map"></div>
     <script defer async
-      src="https://maps.googleapis.com/maps/api/js?key=API_KEY&libraries=maps,marker,drawing&callback=initMap"
+      src="https://maps.googleapis.com/maps/api/js?key={{API_KEY}}&libraries=maps,marker,drawing&callback=initMap"
     ></script>
 
     <main id='maps'>
       <aside id="left">
 
         <button class="square-button" id="criarPoste" onclick="togglePopUpCriarPoste(true)" title="Criar poste">
-          <!-- <img src="../assets/icones/lampada.svg" alt="Criar postes"> -->
+          <!-- <img src="../static/assets/icones/lampada.svg" alt="Criar postes"> -->
            +
         </button>
 
         <button class="square-button" id="recaregar" title="Atualizar/Recarregar postes">
-          <img src="../assets/icones/lampada.svg" alt="Atualizar/Recarregar postes">
+          <img src="../static/assets/icones/lampada.svg" alt="Atualizar/Recarregar postes">
         </button>
 
         <button class="square-button nao-selecionado" id="connect" onclick="toggleConnect(this)" title="Conectar postes">
-          <img src="../assets/icones/Conectarpostes.svg" alt="Conectar postes">
+          <img src="../static/assets/icones/Conectarpostes.svg" alt="Conectar postes">
         </button>
 
         <button class="square-button nao-selecionado" id="addAssociadas" onclick="togglePopUpAssociadas(true)" title="Adicionar empresas associadas em postes selecionados.">
-          <img src="../assets/icones/adicionarEmpresa.svg" alt="Adicionar empresas associadas em postes selecionados.">
+          <img src="../static/assets/icones/adicionarEmpresa.svg" alt="Adicionar empresas associadas em postes selecionados.">
         </button>
 
       </aside>
 
       <aside id="right" class="main-header">
-        <img src="../assets/icones/pessoa.svg" alt="Seu perfil">
+        <img src="../static/assets/icones/pessoa.svg" alt="Seu perfil">
         <a href="">Mapa</a>
-        <a href="notificacoes.html">Notificações</a>
-        <a href="../index.html">Sair</a>
+        <a href="notificacoes">Notificações</a>
+        <a href="./">Sair</a>
       </aside>
 
       <div id="pop-up" class="adicionarPoste"> 
