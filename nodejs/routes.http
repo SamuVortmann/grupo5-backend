@@ -1,0 +1,33 @@
+POST http://localhost:5000/index
+Content-Type: application/json
+
+{
+    "title": "Item 1",
+    "description": "teste"
+}
+
+###
+
+GET http://localhost:5000/index
+
+###
+
+PUT http://localhost:5000/index/
+Content-Type: application/json
+
+{
+    "title": "Item 3",
+    "description": "testado"
+}
+
+###
+
+DELETE http://localhost:5000/index/
+Content-Type: application/json
+
+{
+    "title": "Item 3",
+    "description": "testado"
+}
+
+###
