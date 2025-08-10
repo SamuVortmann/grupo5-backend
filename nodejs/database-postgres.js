@@ -38,7 +38,16 @@ export class DatabasePostgres {
         const { id, nome, codigo, cnpj, telefone, email, senha } = infos;
 
         await sql`INSERT INTO empresa (id, nome, codigo, cnpj, telefone, email, senha) VALUES (${id}, ${nome}, ${codigo}, ${cnpj}, ${telefone}, ${email}, ${senha})`
+    }
 
+    async listEmpresa(coluna, search) {
+        let result;
+        if (!search) {
+            result = await sql`SELECT * FROM empresa`
+        } else {
+            result = await sql`SELECT * FROM empresa WHERE ${coluna} = ${search}`
+        }
+        return result;
     }
 
     // Poste

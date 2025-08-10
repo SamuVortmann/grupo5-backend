@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Header, Navbar e Footer</title>
+    <link rel="stylesheet" href="../static/main.css">
+
+    <script src="../static/script/objetos.js"></script> 
+    <script src="../static/script/main.js" defer></script>
+    <script src="../static/script/debug.js" defer></script> 
+    
+    <script src="../static/script/perfilEmpresa.js" defer></script>
+</head>
+
+<body id="perfilEmpresa">
+
+    <header>
+        <div class="header-left">
+            <h1>Histórico de notificações</h1>
+        </div>
+        <div class="header-center">
+            <span>Poste inválido ▼</span>
+        </div>
+
+
+        <div class="header-right">
+    <div class="criar-container">
+        <a href="registrar/funcionario/<%= idEmpresa %>" class="btn-criar">Cadastrar Funcionário</a>
+        <button class="btn-add">+</button>
+    </div>
+</div>
+
+
+
+    </header>
+
+    <aside class="main-header">
+        <img src="../assets/icones/pessoa.svg" alt="Seu perfil">
+        <a href="notificacoes.html">Notificações</a>
+        <a href="mapa.html">Mapa</a>
+        <a href="../index.html">Sair</a>
+        </select>
+    </aside>
+
+    <main class="container">
+        <section class="info-empresa">
+            <div class="logo"></div>
+            <div class="dados">
+                <p><strong>Nome:</strong> Nome da Empresa</p>
+                <p><strong>CNPJ:</strong> 00.000.000/0000-00</p>
+                <p><strong>Telefone:</strong> (11) 91234-5678</p>
+            </div>
+        </section>
+
+
+        <footer>
+            <div class="footer-left">
+                <img src="instagram.png" alt="Instagram" class="social-icon">
+                <span>Contato: (11) 91234-5678</span>
+            </div>
+            <div class="footer-center">
+                IFC Campus Concórdia
+            </div>
+            <div class="footer-right">
+                © Todos os direitos reservados | 2025
+            </div>
+        </footer>
+
+</body>
+
+</html>

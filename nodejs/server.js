@@ -3,15 +3,15 @@ import fastifyStatic from '@fastify/static';
 import fastifyView from '@fastify/view';
 import path from 'path';
 import ejs from 'ejs';
-import { DatabasePostgres } from './database-postgres.js'; // ajustado para seu arquivo db.js
-
-const server = fastify();
+import { DatabasePostgres } from './database-postgres.js'; 
 const db = new DatabasePostgres();
 
-// Serve arquivos estáticos (CSS, JS, imagens, etc.)
+const server = fastify();
+
+// Serve arquivos estáticos (CSS, JSS, Img, SVG)
 server.register(fastifyStatic, {
     root: path.join(process.cwd(), 'static'), // serve arquivos da pasta static/
-    prefix: '/static/', // acessa via /static/arquivo.ext
+    prefix: '/static/', // acessa via /static/arquivo
 });
 
 // Registra o plugin de visualização com EJS
@@ -19,7 +19,7 @@ server.register(fastifyView, {
     engine: {
         ejs: ejs,
     },
-    root: path.join(process.cwd(), 'views'), // onde estão os arquivos .ejs
+    root: path.join(process.cwd(), 'views'), 
 });
 
 // Rota principal
@@ -29,13 +29,13 @@ server.get('/', async (request, reply) => {
 
 // Rota de cadastro de empresas
 server.get('/registro/empresas', async (request, reply) => {
-    return reply.view('cadastroEmpresa.ejs'); // ainda está como .html, pode converter para .ejs
+    return reply.view('cadastroEmpresa.ejs');
 });
 
 // Rota de cadastro de funcionários
 server.get('/registro/funcionario/:idEmpresa', async (request, reply) => {
     const idEmpresa = request.params.idEmpresa;
-    return reply.view('cadastroFuncionario.ejs', { idEmpresa }); // pode virar .ejs
+    return reply.view('cadastroFuncionario.ejs', { idEmpresa });
 });
 
 server.get('/logar', async (request, reply) => {
@@ -56,7 +56,11 @@ server.get('/historico/:number', async (request, reply) => {
     return reply.view('historico.ejs', {num: number});
 });
 
-
+server.get('/empresas', async (request, reply) => {
+    const empresas = await db.listEmpresa();
+    reply.send(empresas)
+    return empresas;
+});
 
 
 
@@ -83,7 +87,6 @@ server.post('/mapa', async (request, reply) => {
     const { lat, lng, empresa_dona, regiao, status, conexcoes } = request.body;
 
     const infos = {id, lat, lng, empresa_dona, regiao, status, conexcoes};
-    
 
     await db.createPoste(infos);
     return reply.status(201).send();
