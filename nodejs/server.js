@@ -42,6 +42,29 @@ server.get('/logar', async (request, reply) => {
     return reply.view('login.ejs');
 });
 
+server.get('/mapa', async (request, reply) => {
+    const version = Math.random()*100; // utilizado para o mapa carregar assim que recarregar a pagina??? bug esquisito
+    return reply.view('mapa.ejs', {api_key: process.env.API_KEY, versao: version});
+})
+
+server.get('/notificacoes', async (request, reply) => {
+    return reply.view('notificacoes.ejs');
+});
+
+server.get('/historico/:number', async (request, reply) => {
+    const number = request.params.number;
+    return reply.view('historico.ejs', {num: number});
+});
+
+
+
+
+
+
+
+
+
+
 // Rota POST para criar dados
 server.post('/index', async (request, reply) => {
     const { title, description } = request.body;
