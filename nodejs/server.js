@@ -1,69 +1,71 @@
-// GET -> Buscar informação
-// POST -> Criação
-// PUT -> Alteração
-// DELETE 
-//PATCH -> Alterar apenas 1 informação específica
+import { fastify } from "fastify";
+import fastifyStatic from '@fastify/static';
+import fastifyView from '@fastify/view';
+import path from 'path';
+import ejs from 'ejs';
+import { DatabasePostgres } from './database-postgres.js'; // ajustado para seu arquivo db.js
 
-// import { DatabaseMemory } from './database-memory.js';
-import { DatabasePostgres } from './database-postgres.js';
-import {fastify} from "fastify";
-
-const server = fastify();// cria os server
-
-// const db = new DatabaseMemory();
+const server = fastify();
 const sql = new DatabasePostgres();
 
+// Serve arquivos estáticos (CSS, JS, imagens, etc.)
+server.register(fastifyStatic, {
+    root: path.join(process.cwd(), 'static'), // serve arquivos da pasta static/
+    prefix: '/static/', // acessa via /static/arquivo.ext
+});
 
-// Rota , Executa tal
+// Registra o plugin de visualização com EJS
+server.register(fastifyView, {
+    engine: {
+        ejs: ejs,
+    },
+    root: path.join(process.cwd(), 'views'), // onde estão os arquivos .ejs
+});
+
+// Rota principal
+server.get('/', async (request, reply) => {
+    return reply.view('index.ejs', { nome: "Nome do Bruno!" });
+});
+
+// Rota de cadastro de empresas
+server.get('/registro/empresas', async (request, reply) => {
+    return reply.view('cadastroEmpresa.ejs'); // ainda está como .html, pode converter para .ejs
+});
+
+// Rota de cadastro de funcionários
+server.get('/registro/funcionario/:idEmpresa', async (request, reply) => {
+    const idEmpresa = request.params.idEmpresa;
+    return reply.view('cadastroFuncionario.ejs', { idEmpresa }); // pode virar .ejs
+});
+
+server.get('/logar', async (request, reply) => {
+    return reply.view('login.ejs');
+});
+
+// Rota POST para criar dados
 server.post('/index', async (request, reply) => {
-
     const { title, description } = request.body;
-
-    // console.log(body);
-
-    await sql.create({
-        title,
-        description,
-    });
-
-    console.log(sql.list());
-
+    await sql.create({ title, description });
     return reply.status(201).send();
-})
+});
 
-// Navegadores apenas acessam essa!
- server.get('/index', async (request, reply) => {
-                          //Opticional -> pega variavel
-    const search = request.query;
-    console.log(search);
-
-    const videos = await sql.list(search);
-    return videos;
-})
-
-// : <- variavel
+// Rota PUT para atualizar dados
 server.put('/index/:id', async (request, reply) => {
     const id = request.params.id;
-    // Pega do corpo da request (AInda não sei fazer isso em SITE)
     const { title, description } = request.body;
-    // Faz update no BD
-    await sql.update(id, {
-        title,
-        description,
-    })
-    
+    await sql.update(id, { title, description });
     return reply.status(204).send();
-})
+});
 
-server.delete('/index/:id', async(request, reply) => {
+// Rota DELETE para remover dados
+server.delete('/index/:id', async (request, reply) => {
     const id = request.params.id;
-    
-    // Faz delete no BD
-    await sql.delete(id)
-
+    await sql.delete(id);
     return reply.status(204).send();
-})
+});
 
-server.listen({
-    port: 5000,
-}) 
+// Inicia o servidor
+server.listen({ port: 5000 }, (err, address) => {
+    if (err) throw err;
+    console.log(`Servidor rodando em ${address}`);
+});

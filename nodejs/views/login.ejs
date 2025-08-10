@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8">
+  <title>Login Empresa</title>
+  <link rel="stylesheet" href="../static/main.css">
+
+  <script src="../static/script/login.js" defer></script>
+</head>
+<body id="login">
+  <img src="../static/assets/icones/logo.png" alt="Logo" class="logo">
+  
+  <main id="Slogin">
+    <div id="form-login">
+      <h2> Login </h2>
+      <div id="selector">
+        <a class="bigger-button" onclick="setQuem(0)">Empresa</a>
+        <a class="bigger-button nao-selecionado" onclick="setQuem(1)">Funcionário</a>
+      </div>  
+      <form>
+        <input type="email" placeholder="E-mail" class="input-texts" name="email" required>
+        <input type="password" placeholder="Senha" class="input-texts" name='senha' required>
+        <input type="password" placeholder="Código único da empresa" class="input-texts" name="cnpj" required>
+
+        <button type="submit" class="bigger-button">LOGIN</button>
+      </form>
+
+    </div>
+  </main>
+</body>
+</html>
