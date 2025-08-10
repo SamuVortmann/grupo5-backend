@@ -1,13 +1,42 @@
-POST http://localhost:5000/index
+POST http://localhost:5000/registro/empresas
 Content-Type: application/json
 
 {
-    "title": "Item 2",
-    "description": "teste"
+    "nome": "LaRa's Corp",
+    "codigo": "3171",
+    "cnpj": "1",
+    "telefone": "1",
+    "email": "L@C",
+    "senha": "lara"
 }
 
 ###
 
+POST http://localhost:5000/historico/0
+Content-Type: application/json
+
+{
+    id, posteassociado, descricao, status
+}
+
+###
+
+POST http://localhost:5000/mapa
+Content-Type: application/json
+
+{
+    "lat": -27.200476,
+    "lng": -52.082809,
+    "empresa_dona": 1,
+    "regiao": 1,
+    "status": 1,
+    "conexcoes": {
+
+    }
+}
+
+
+###
 GET http://localhost:5000/index
 
 ###

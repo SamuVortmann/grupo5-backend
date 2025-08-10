@@ -5,5 +5,3 @@ const {PGHOST, PGDATABASE, PGUSER, PGPASSWORD, PGSSLMODE ,PGCHANNELBINDING} = pr
 const URL = `postgres://${PGUSER}:${PGPASSWORD}@${PGHOST}/${PGDATABASE}?sslmode=${PGSSLMODE}&channel_binding=${PGCHANNELBINDING}`
 
 export const sql = postgres(URL);
-const resposta = await sql`SELECT * FROM items`;
-console.log(resposta)

@@ -2,43 +2,78 @@ import {randomUUID} from "node:crypto";
 import {sql} from './db.js'
 
 export class DatabasePostgres {
-    #items = new Map();
-    #ids = 0;
 
-    async list(search = '') {
-        let items;
-        console.log(search);
+    async list(tabela, search = '') {
+        
 
-
-        items = await sql`SELECT * FROM items`
+        items = await sql`SELECT * FROM ${tabela}`
         
         console.log(items);
 
         return items;
     }
 
-    async create(item) {
-        // const { nome,codigo, cnpj, telefone, email } = item;
-
-        // await sql`INSERT INTO empresa (id, nome, codigo, cnpj, telefone, email) VALUES (${videoID}, ${nome}, ${codigo}, ${cnpj}, ${telefone}, ${email})`
-
-        const { title, description } = item;
-
-        await sql`INSERT INTO items (id, title, description) VALUES (${++this.#ids}, ${title}, ${description})`
-
-    }
-
-    async update(itemID, item) {
+    async update(tabela, itemID, item) {
 
         const { title, description } = item
 
-        await sql`UPDATE items SET title = ${title}, description =${description} WHERE id = ${itemID}`
+        await sql`UPDATE ${tabela} SET title = ${title}, description =${description} WHERE id = ${itemID}`
 
     }
 
-    async delete(itemId) {
+    async delete(tabela, itemId) {
+        await sql`DELETE FROM ${tabela} WHERE id = ${itemId}`
+    }
 
-        await sql`DELETE FROM items WHERE id = ${itemId}`
+    async pegarMaiorIdDe(tabela) {
+        console.log('tentando pegar');
+        const maior = await sql`SELECT MAX(id) FROM ${tabela}`;
+        console.log(maior);
+        return maior ? maior : 1; 
+    }
 
+    // Empresa
+    async createEmpresa(infos) {
+        console.log(infos);
+        const { id, nome, codigo, cnpj, telefone, email, senha } = infos;
+
+        await sql`INSERT INTO empresa (id, nome, codigo, cnpj, telefone, email, senha) VALUES (${id}, ${nome}, ${codigo}, ${cnpj}, ${telefone}, ${email}, ${senha})`
+
+    }
+
+    // Poste
+    async createPoste(infos) {
+
+        const { id, lat, lng, empresa_dona, regiao, status, conexcoes } = infos;
+
+        await sql`INSERT INTO poste (id, coord_lat, coord_lng, empresa_dona, regiao, status, conexcoes) VALUES (${id}, ${lat}, ${lng}, ${empresa_dona}, ${regiao}, ${status}, ${conexcoes})`
+    }
+
+    async listPoste(coluna, search) {
+        let result;
+        if (!search) {
+            result = await sql`SELECT * FROM postes`
+        } else {
+            result = await sql`SELECT * FROM postes WHERE ${coluna} = ${search}`
+        }
+        return result;
+    }
+
+    //Notificações
+    async createNot(infos) {
+        console.log(infos);
+        const { id, posteassociado, descricao, status } = infos;
+
+        await sql`INSERT INTO notificacao (id, posteassociado, descricao, status) VALUES (${id}, ${posteassociado}, ${descricao}, ${status})`
+    }
+
+    async listNot(coluna, search) {
+        let result;
+        if (!search) {
+            result = await sql`SELECT * FROM notificacao`
+        } else {
+            result = await sql`SELECT * FROM notificacao WHERE ${coluna} = ${search}`
+        }
+        return result;
     }
 }

@@ -6,7 +6,7 @@ import ejs from 'ejs';
 import { DatabasePostgres } from './database-postgres.js'; // ajustado para seu arquivo db.js
 
 const server = fastify();
-const sql = new DatabasePostgres();
+const db = new DatabasePostgres();
 
 // Serve arquivos estáticos (CSS, JS, imagens, etc.)
 server.register(fastifyStatic, {
@@ -62,30 +62,70 @@ server.get('/historico/:number', async (request, reply) => {
 
 
 
+/* Request com o banco de dados! */
+server.post('/registro/empresas', async (request, reply) => {
+    const id = await db.pegarMaiorIdDe('empresa');
+    // const id = 1;
+    console.log(id);
+    
+    const { nome, codigo, cnpj, telefone, email, senha } = request.body;
+
+    const infos = {id, nome, codigo, cnpj, telefone, email, senha};
+    console.log(infos);
+
+    await db.createEmpresa(infos);
+    return reply.status(201).send();
+});
+
+// Criar poste!
+server.post('/mapa', async (request, reply) => {
+    const id = 1;
+    const { lat, lng, empresa_dona, regiao, status, conexcoes } = request.body;
+
+    const infos = {id, lat, lng, empresa_dona, regiao, status, conexcoes};
+    
+
+    await db.createPoste(infos);
+    return reply.status(201).send();
+});
+
+// Criar notificação!
+server.post('/historico/:number', async (request, reply) => {
+
+    const number = request.params.number;
+    
+    const { posteassociado, descricao, status } = request.body;
+
+    const infos = {id, posteassociado, descricao, status};
+    console.log(infos);
+
+    await db.createNotificacao(infos);
+    return reply.status(201).send();
+});
 
 
 
 // Rota POST para criar dados
-server.post('/index', async (request, reply) => {
-    const { title, description } = request.body;
-    await sql.create({ title, description });
-    return reply.status(201).send();
-});
+// server.post('/index', async (request, reply) => {
+//     const { title, description } = request.body;
+//     await sql.create({ title, description });
+//     return reply.status(201).send();
+// });
 
-// Rota PUT para atualizar dados
-server.put('/index/:id', async (request, reply) => {
-    const id = request.params.id;
-    const { title, description } = request.body;
-    await sql.update(id, { title, description });
-    return reply.status(204).send();
-});
+// // Rota PUT para atualizar dados
+// server.put('/index/:id', async (request, reply) => {
+//     const id = request.params.id;
+//     const { title, description } = request.body;
+//     await sql.update(id, { title, description });
+//     return reply.status(204).send();
+// });
 
-// Rota DELETE para remover dados
-server.delete('/index/:id', async (request, reply) => {
-    const id = request.params.id;
-    await sql.delete(id);
-    return reply.status(204).send();
-});
+// // Rota DELETE para remover dados
+// server.delete('/index/:id', async (request, reply) => {
+//     const id = request.params.id;
+//     await sql.delete(id);
+//     return reply.status(204).send();
+// });
 
 // Inicia o servidor
 server.listen({ port: 5000 }, (err, address) => {
