@@ -22,4 +22,3 @@ async function deleteUser(id) {
     await fetch(`${API_URL}/users/${id}`, { method: "DELETE" });
     loadUsers();
 }
-
