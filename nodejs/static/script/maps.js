@@ -4,6 +4,25 @@ const recarregarForcado = document.querySelector('main#maps button#recaregar');
 const selecionarEmpresaOnLoad = document.getElementById('selecionarEmpresa');
 const selecionarServico = document.getElementById('especificarServico');
 
+// axios.post('http', {objeto})
+//window.location.origin -> pegar varivel
+
+/*
+let title = 'Memórias de bras cubas'
+
+axios.post('http://localhost:3001/post', {
+    title,
+    "body": "",
+})
+
+{
+"title": "memórias de bras cubas"
+"body": ""
+}
+
+*/
+
+
 let selecionados = [];
 let contextMenuWindow;
 
