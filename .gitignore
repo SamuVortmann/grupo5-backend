@@ -8,3 +8,4 @@ backend/__pycache__/inicio.cpython-312.pyc
 backend/__pycache__/env.cpython-312.pyc
 nodejs/.env
 node_modules
+package-lock.json
