@@ -12,6 +12,8 @@ CREATE TABLE empresa (
 CREATE TABLE funcionario (
     id SERIAL PRIMARY KEY,
     nome VARCHAR(50) NOT NULL,
+    usuario VARCHAR(30) UNIQUE NOT NULL,
+    email VARCHAR(40) UNIQUE NOT NULL,
     senha VARCHAR(255) NOT NULL,
     code INTEGER,
     empresa_id INTEGER,

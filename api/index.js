@@ -2,22 +2,19 @@ const pgp = require('pg-promise')();
 const express = require('express')
 
 const dbConfig = {
-    host: '164.90.152.205',
-    port: 80,
+    host: 'localhost',
+    port: 5432,
     database: '2ggrupo5', // Replace with your database name
     user: 'postgres',         // Replace with your PostgreSQL username
-    password: '3f@db'
+    password: '000'
 };
 
 const db = pgp(dbConfig);
-
 const app = express();
 app.use(express.json());
 const port = 3000
 
-app.get('/', (req, res) => {
-  res.send('Hello World!')
-})
+
 
 app.post('/login', async (req, res) => {
     const dados = req.body;
