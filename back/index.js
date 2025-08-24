@@ -15,6 +15,8 @@ app.use(express.json());
 const port = 3000
 
 
+// ----------------- Funcionario ----------------- //
+
 // Cadastra o funcionário
 app.post('/cadastrofunc', async (req, res) => {
     try {
@@ -67,6 +69,8 @@ app.post('/loginfunc', async (req, res) => {
 
 
 //-----------Empresa------------//
+
+
 // cadastra a empresa
 app.post('/cadastroempr', async (req, res) => {
     try {
@@ -106,7 +110,7 @@ app.post('/loginempr', async (req, res) => {
             'SELECT * FROM empresa WHERE email = $1 and senha = $2 and code= $3', 
             [dados.email, dados.senha, dados.code]
         );
-
+        // Valida
         if (!resposta) {
             res.json({resposta: 'Email, senha ou codigo único está Incorreto'});
         } 
@@ -128,6 +132,9 @@ app.post('/loginempr', async (req, res) => {
 });
 
 
+
+
+// --------------- Consulta do Insomnia no BD------------------- //
 
 app.get('/testefunc', async (req, res) => {
     const resposta = await db.any('SELECT * FROM funcionario');
