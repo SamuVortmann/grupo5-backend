@@ -10,6 +10,7 @@ const  DB_PORT = 5432;
 const  DB_NAME = 'visux';
 const  DB_USER = 'bruno';
 const  DB_PASS = '1234';
+const JWT_SECRET = "90d0af04bc640175822155f4b675b977a16633eda4b3005da54a0182cac641d1"
 
 const  PORT = 3001;
 
@@ -78,25 +79,27 @@ app.post('/cadastroempresa', async (req, res) => {
   }
 });
 
-app.get('/loginEmpresas', (req, res) => {
-  res.json({olamundo: 'ola :D'});
-});
 
 // Login empresa
 app.post('/loginEmpresas', async (req, res) => {
   try {
     console.log(req.body);
-    const { email, senha } = req.body;
+    // const { email, senha } = req.body;
+    //  DEBUG PARA NÃO DAR PROBLEMA!
+    let email = 'drag@isada.com';
+    let senha = '1234';
     console.log(req.body);
     if (!email || !senha) return res.status(400).json({ erro: 1, mensagem: 'email, senha obrigatórios' });
 
     const empresa = await db.oneOrNone('SELECT * FROM empresas WHERE email = $1', [email]);
+
     if (!empresa) return res.status(401).json({ erro: 2, mensagem: 'Email ou código incorreto.' });
 
     if (senha !== empresa.senha) return res.status(401).json({ erro: 2, mensagem: 'Senha incorreta.' });
 
     const token = gerarToken({ id: empresa.id, type: 'empresa' });
-    res.json({ resposta: 'Login de empresa realizado com sucesso', token });
+    // res.json({ resposta: 'Login de empresa realizado com sucesso', token });
+    res.json({ empresa: empresa})
   } catch (error) {
     console.error('loginEmpresas error:', error);
     res.status(500).json({ erro: 1, mensagem: 'Erro interno no servidor.', detalhe: error.message });
