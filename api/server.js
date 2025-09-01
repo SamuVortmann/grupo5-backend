@@ -10,7 +10,8 @@ const  DB_PORT = 5432;
 const  DB_NAME = 'visux';
 const  DB_USER = 'bruno';
 const  DB_PASS = '1234';
-const  PORT = 3000;
+
+const  PORT = 3001;
 
 
 const db = pgp({
@@ -69,7 +70,7 @@ app.post('/cadastroempresa', async (req, res) => {
     const { nome, email, senha, cnpj, code } = req.body;
     if (!nome || !email || !senha || !cnpj) return res.status(400).json({ erro: 1, mensagem: 'nome, email, senha e cnpj obrigatórios' });
 
-    await db.none('INSERT INTO empresa (nome, email, senha, cnpj, code) VALUES ($1, $2, $3, $4, $5)', [nome, email, senha, cnpj, code || null]);
+    await db.none('INSERT INTO empresas (nome, email, senha, cnpj, code) VALUES ($1, $2, $3, $4, $5)', [nome, email, senha, cnpj, code || null]);
     res.status(201).json({ resposta: 'Cadastro realizado com sucesso!' });
   } catch (error) {
     console.error('cadastroempr error:', error);
@@ -77,13 +78,19 @@ app.post('/cadastroempresa', async (req, res) => {
   }
 });
 
-// Login empresa
-app.post('/loginempresa', async (req, res) => {
-  try {
-    const { email, senha, code } = req.body;
-    if (!email || !senha || typeof code === 'undefined') return res.status(400).json({ erro: 1, mensagem: 'email, senha e code obrigatórios' });
+app.get('/loginEmpresas', (req, res) => {
+  res.json({olamundo: 'ola :D'});
+});
 
-    const empresa = await db.oneOrNone('SELECT * FROM empresa WHERE email = $1 AND code = $2', [email, code]);
+// Login empresa
+app.post('/loginEmpresas', async (req, res) => {
+  try {
+    console.log(req.body);
+    const { email, senha } = req.body;
+    console.log(req.body);
+    if (!email || !senha) return res.status(400).json({ erro: 1, mensagem: 'email, senha obrigatórios' });
+
+    const empresa = await db.oneOrNone('SELECT * FROM empresas WHERE email = $1', [email]);
     if (!empresa) return res.status(401).json({ erro: 2, mensagem: 'Email ou código incorreto.' });
 
     if (senha !== empresa.senha) return res.status(401).json({ erro: 2, mensagem: 'Senha incorreta.' });
@@ -91,7 +98,7 @@ app.post('/loginempresa', async (req, res) => {
     const token = gerarToken({ id: empresa.id, type: 'empresa' });
     res.json({ resposta: 'Login de empresa realizado com sucesso', token });
   } catch (error) {
-    console.error('loginempr error:', error);
+    console.error('loginEmpresas error:', error);
     res.status(500).json({ erro: 1, mensagem: 'Erro interno no servidor.', detalhe: error.message });
   }
 });

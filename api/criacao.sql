@@ -5,7 +5,7 @@ CREATE DATABASE visux;
 CREATE TABLE empresas (
     id SERIAL PRIMARY KEY,
     nome VARCHAR(150) NOT NULL,
-    codigo CHAR(4) NOT NULL,
+    codigo CHAR(4) NOT NULL UNIQUE,
     cnpj VARCHAR(20) NOT NULL,
     telefone VARCHAR(30),
     email VARCHAR(150) NOT NULL,
