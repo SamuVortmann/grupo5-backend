@@ -1,10 +1,10 @@
 # Mudanças a serem feitas no sistema:
 
 Não ter/remover para ter tempo
-- Criptografia
-- Login como funcionário -> Apenas empresas
-- Região
-- Conexções ????? 
+- Criptografia / ok
+- Login como funcionário -> Apenas empresas / ok
+- Região / ok
+- Conexções ????? / ok
 
 
 
