@@ -1,8 +1,8 @@
 -- Criação das empresas
-INSERT INTO empresa (id, nome, codigo, cnpj, telefone, email) VALUES (1, 'Bruno"s Corp', '0413', 0, 0, 'L@g');
-INSERT INTO empresa (id, nome, codigo, cnpj, telefone, email) VALUES (2, 'LaRa"s Corp', '1379', 0, 0, 'B@g');
-INSERT INTO empresa (id, nome, codigo, cnpj, telefone, email) VALUES (3, 'Sperb"s Corp', '0359', 0, 0, 'S@g');
-INSERT INTO empresa (id, nome, codigo, cnpj, telefone, email) VALUES (4, 'Veriatos"s Corp', '4121', 0, 0, 'V@g');
+INSERT INTO empresa (id, nome, codigo, cnpj, telefone, email) VALUES ('Bruno"s Corp', '0413', 0, 0, 'L@g');
+INSERT INTO empresa (id, nome, codigo, cnpj, telefone, email) VALUES ('LaRa"s Corp', '1379', 0, 0, 'B@g');
+INSERT INTO empresa (id, nome, codigo, cnpj, telefone, email) VALUES ('Sperb"s Corp', '0359', 0, 0, 'S@g');
+INSERT INTO empresa (id, nome, codigo, cnpj, telefone, email) VALUES ('Veriatos"s Corp', '4121', 0, 0, 'V@g');
 
 INSERT INTO poste (id, coord_lat, coord_lng, empresa_dona, regiao, status) VALUES (1, -27.200476, -52.082809, 1, 1, 1);
 INSERT INTO poste (id, coord_lat, coord_lng, empresa_dona, regiao, status) VALUES (2, -27.2007753911968, -52.08286800859833, 1, 1, 1);

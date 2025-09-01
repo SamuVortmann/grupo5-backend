@@ -5,15 +5,13 @@ const cors = require('cors');
 const pgp = require('pg-promise')();
 const jwt = require('jsonwebtoken');
 
-const {
-  DB_HOST = 'localhost',
-  DB_PORT = 5432,
-  DB_NAME = '2ggrupo5',
-  DB_USER = 'postgres',
-  DB_PASS = '000',
-  JWT_SECRET = 'troque_este_segredo_agora',
-  PORT = 3000
-} = process.env;
+const  DB_HOST = 'localhost';
+const  DB_PORT = 5432;
+const  DB_NAME = 'visux';
+const  DB_USER = 'bruno';
+const  DB_PASS = '1234';
+const  PORT = 3000;
+
 
 const db = pgp({
   host: DB_HOST,

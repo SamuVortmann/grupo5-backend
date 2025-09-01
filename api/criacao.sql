@@ -8,7 +8,8 @@ CREATE TABLE empresas (
     codigo CHAR(4) NOT NULL,
     cnpj VARCHAR(20) NOT NULL,
     telefone VARCHAR(30),
-    email VARCHAR(150) NOT NULL
+    email VARCHAR(150) NOT NULL,
+    senha VARCHAR(150) NOT NULL
 );
 
 -- Possível remoção
