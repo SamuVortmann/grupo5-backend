@@ -20,7 +20,7 @@ CREATE TABLE funcionarios (
     -- endereco ??? 
     id_empresa_dona INT NOT NULL,
 
-    CONSTRAINT fk_empresa_dona FOREIGN KEY (ik_empresa_dona) REFERENCES empresa(id) ON DELETE CASCADE ON UPDATE CASCADE,
+    CONSTRAINT fk_empresa_dona FOREIGN KEY (id_empresa_dona) REFERENCES empresas(id) ON DELETE CASCADE ON UPDATE CASCADE
 );
 
 
@@ -33,7 +33,7 @@ CREATE TABLE postes (
     -- empresas_associadas
     status INT NOT NULL,
 
-    CONSTRAINT fk_empresa_dona FOREIGN KEY (id_empresa_dona) REFERENCES empresa(id) ON DELETE CASCADE ON UPDATE CASCADE,
+    CONSTRAINT fk_empresa_dona FOREIGN KEY (id_empresa_dona) REFERENCES empresas(id) ON DELETE CASCADE ON UPDATE CASCADE
 );
 
 CREATE TABLE notificacoes (
@@ -41,8 +41,8 @@ CREATE TABLE notificacoes (
     id_poste_associado INT NOT NULL,
     descricao VARCHAR(250) NULL,
     status INT NOT NULL,
-    data DATETIME DEFAULT CURRENT_DATETIME,
+    data TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
 
-    CONSTRAINT fk_poste_associado FOREIGN KEY (id_posteAssociado) REFERENCES poste(id) ON DELETE CASCADE ON UPDATE CASCADE
+    CONSTRAINT fk_poste_associado FOREIGN KEY (id_poste_associado) REFERENCES postes(id) ON DELETE CASCADE ON UPDATE CASCADE
 );
 
