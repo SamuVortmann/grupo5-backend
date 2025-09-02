@@ -293,6 +293,20 @@ app.post('/postes', async (req, res) => {
   }
 });
 
+// Pegar postes específico (geral)
+app.post('/empresa/postes', async (req, res) => {
+  try {
+    const { id_poste } = req.body;
+
+    const postes = await db.any('SELECT * FROM postes WHERE id = $1', [id_poste]);
+
+    res.json(postes);
+  } catch (error) {
+    console.error('Erro ao pegar postes da empresa:', error);
+    res.status(500).json({ erro: 1, mensagem: 'Erro interno ao pegar postes.' });
+  }
+});
+
 
 // Pegar todas as notificações de todos os postes de uma empresa
 app.post('/notificacoes', async (req, res) => {
