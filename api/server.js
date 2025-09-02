@@ -27,6 +27,7 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
+
 // ---------------- HELPERS JWT ----------------
 
 function gerarToken(payload) {
@@ -113,17 +114,17 @@ app.post('/loginEmpresas', async (req, res) => {
 // ---------------- NOTIFICAÇÕES ----------------
 
 // Criar notificação (ABERTO)
-app.post('/notificacoes', async (req, res) => {
+app.post('/criarnotificacao', async (req, res) => {
   try {
-    const { texto, data, status = 'pendente', id_do_poste } = req.body;
+    const { texto, status = INTEGER, id_do_poste } = req.body;
 
     if (!texto || !id_do_poste) {
       return res.status(400).json({ erro: 1, mensagem: 'texto e id_do_poste obrigatórios' });
     }
 
     const nova = await db.one(
-      'INSERT INTO notificacoes (texto, data, status, id_do_poste) VALUES ($1, $2, $3, $4) RETURNING *',
-      [texto, data || null, status, id_do_poste]
+      'INSERT INTO notificacoes (texto, status, id_do_poste) VALUES ($1, $2, $3,) RETURNING *',
+      [texto, status, id_do_poste]
     );
 
     res.status(201).json({ resposta: 'Notificação criada com sucesso!', notificacao: nova });
@@ -134,7 +135,7 @@ app.post('/notificacoes', async (req, res) => {
 });
 
 // Editar notificação (ABERTO)
-app.put('/notificacoes/:id', async (req, res) => {
+app.put('/editarnotificacao/:id', async (req, res) => {
   try {
     const { id } = req.params;
     const { texto, status, data } = req.body;
@@ -156,7 +157,7 @@ app.put('/notificacoes/:id', async (req, res) => {
 });
 
 // Deletar notificação (ABERTO)
-app.delete('/notificacoes/:id', async (req, res) => {
+app.delete('/deletarnotificacao/:id', async (req, res) => {
   try {
     const { id } = req.params;
 
@@ -265,7 +266,69 @@ app.delete('/postes/:id', autenticarToken, async (req, res) => {
     res.status(500).json({ erro: 1, mensagem: 'Erro interno ao deletar poste.' });
   }
 });
+
+// Pegar postes de uma empresa específica
+app.get('/postes/:id_empresa', async (req, res) => {
+  try {
+    const { id_empresa } = req.params;
+
+    const postes = await db.any(
+      'SELECT * FROM postes WHERE empresa_id = $1 ORDER BY id DESC',
+      [id_empresa]
+    );
+
+    res.json(postes);
+  } catch (error) {
+    console.error('Erro ao pegar postes da empresa:', error);
+    res.status(500).json({ erro: 1, mensagem: 'Erro interno ao pegar postes.' });
+  }
+});
+
+
+// Pegar todas as notificações de todos os postes de uma empresa
+app.post('/notificacoes', async (req, res) => {
+  try {
+    const { id_empresa } = req.params;
+
+    const notificacoes = await db.any(`
+      SELECT *
+      FROM notificacoes
+      WHERE id_poste_associado IN (
+      SELECT id
+      FROM postes
+      WHERE id_empresa_dona= ${id_empresa}
+      `);
+
+    res.json(notificacoes);
+  } catch (error) {
+    console.error('Erro ao pegar notificações da empresa:', error);
+    res.status(500).json({ erro: 1, mensagem: 'Erro interno ao pegar notificações.' });
+  }
+});
+
+
+// Pegar notificações de um poste específico
+app.get('/postes/:id_poste/notificacoes', async (req, res) => {
+  try {
+    const { id_poste } = req.params;
+
+    const notificacoes = await db.any(
+      'SELECT * FROM notificacoes WHERE id_do_poste = $1 ORDER BY data DESC',
+      [id_poste]
+    );
+
+    res.json(notificacoes);
+  } catch (error) {
+    console.error('Erro ao pegar notificações do poste:', error);
+    res.status(500).json({ erro: 1, mensagem: 'Erro interno ao pegar notificações.' });
+  }
+});
+
+
+
 // ---------------- START ----------------
 app.listen(PORT, () => {
   console.log(`🚀 Servidor rodando em http://localhost:${PORT}`);
 });
+
+
