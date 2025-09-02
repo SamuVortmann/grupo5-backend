@@ -17,7 +17,7 @@ INSERT INTO empresas (nome, codigo, cnpj, telefone, email, senha) VALUES ('Veria
 INSERT INTO postes (lat, lng, id_empresa_dona, status) VALUES (-27.432, -52.423, 1, 1);
 INSERT INTO postes (lat, lng, id_empresa_dona, status) VALUES (0, 0, 2, 1);
 INSERT INTO postes (lat, lng, id_empresa_dona, status) VALUES (1, 1, 2, 1);
-INSERT INTO postes (lat, lng, id_empresa_dona, status) VALUES (-27.432, -52.423, 1, 1);
+INSERT INTO postes (lat, lng, id_empresa_dona, status) VALUES (-27.432, -51.423, 1, 1);
 
 -- criando notificações para postes na empresa 1
 INSERT INTO notificacoes ( id_poste_associado, descricao, status) VALUES (1, 'Ola mundo', 1);

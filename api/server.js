@@ -204,6 +204,18 @@ app.get('/postes', async (req, res) => {
   }
 });
 
+app.get('/nomeEmpresas', async (req, res) => {
+  try {
+    
+    const idNome = await db.any('SELECT id, nome FROM empresas');
+
+    res.status(201).json(idNome);
+  } catch (error) {
+    console.error('Erro ao pegar idNome:', error);
+    res.status(500).json({ erro: 1, mensagem: 'Erro interno ao pegar idNome.' });
+  }
+});
+
 // Criar um novo poste (qualquer um autenticado pode criar)
 app.post('/postesCriar', autenticarToken, async (req, res) => {
   try {
@@ -296,6 +308,8 @@ app.post('/notificacoes', async (req, res) => {
     res.status(500).json({ erro: 1, mensagem: 'Erro interno ao pegar notificações.' });
   }
 });
+
+
 
 
 // Pegar notificações de um poste específico
