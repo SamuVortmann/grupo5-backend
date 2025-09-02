@@ -11,8 +11,8 @@ CREATE TABLE empresas (
     email VARCHAR(150) NOT NULL,
     senha VARCHAR(150) NOT NULL,
     zoom INT DEFAULT 10,
-    centro_lat VARCHAR(30) DEFAULT 0,
-    centro_lng VARCHAR(30) DEFAULT 0
+    centro_lat NUMERIC(5, 15) DEFAULT 0.0,
+    centro_lng NUMERIC(5, 15) DEFAULT 0.0
 );
 
 -- Possível remoção

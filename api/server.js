@@ -190,7 +190,18 @@ app.get('/postes/:id/notificacoes', async (req, res) => {
   }
 });
 
+//Listar todos os postes
+app.get('/postes', async (req, res) => {
+  try {
+    
+    const postes = await db.any('SELECT * FROM postes');
 
+    res.status(201).json(postes);
+  } catch (error) {
+    console.error('Erro ao pegar poste:', error);
+    res.status(500).json({ erro: 1, mensagem: 'Erro interno ao pegar poste.' });
+  }
+});
 
 // Criar um novo poste (qualquer um autenticado pode criar)
 app.post('/postes', autenticarToken, async (req, res) => {
@@ -212,6 +223,8 @@ app.post('/postes', autenticarToken, async (req, res) => {
     res.status(500).json({ erro: 1, mensagem: 'Erro interno ao criar poste.' });
   }
 });
+
+
 
 // Atualizar um poste (qualquer um autenticado pode editar)
 app.put('/postes/:id', autenticarToken, async (req, res) => {

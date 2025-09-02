@@ -23,4 +23,8 @@ INTO notificacao ( posteAssociado, descricao, status) VALUES (4, 4, 'Teste no 4'
 INTO notificacao ( posteAssociado, descricao, status) VALUES (5, 6, 'Onibus bateu forte, ix', 1);
 
 
--- Outras empresas
+-- Criar postes
+INSERT INTO postes (lat, lng, id_empresa_dona, status) VALUES (-27.432, -52.423, 1, 1);
+INSERT INTO postes (lat, lng, id_empresa_dona, status) VALUES (0, 0, 2, 1);
+
+
