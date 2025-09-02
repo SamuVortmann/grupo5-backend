@@ -1,6 +1,6 @@
 CREATE DATABASE visux;
 
--- \c visux;
+\c visux;
 
 CREATE TABLE empresas (
     id SERIAL PRIMARY KEY,
@@ -11,21 +11,21 @@ CREATE TABLE empresas (
     email VARCHAR(150) NOT NULL,
     senha VARCHAR(150) NOT NULL,
     zoom INT DEFAULT 10,
-    centro_lat NUMERIC(5, 15) DEFAULT 0.0,
-    centro_lng NUMERIC(5, 15) DEFAULT 0.0
+    centro_lat VARCHAR(40) DEFAULT 0.0,
+    centro_lng VARCHAR(40) DEFAULT 0.0
 );
 
 -- Possível remoção
-CREATE TABLE funcionarios (
-    id SERIAL PRIMARY KEY,
-    nome VARCHAR(150) NOT NULL,
-    senha VARCHAR(50) NOT NULL,
-    email VARCHAR(150) NOT NULL,
-    -- endereco ??? 
-    id_empresa_dona INT NOT NULL,
+-- CREATE TABLE funcionarios (
+--     id SERIAL PRIMARY KEY,
+--     nome VARCHAR(150) NOT NULL,
+--     senha VARCHAR(50) NOT NULL,
+--     email VARCHAR(150) NOT NULL,
+--     -- endereco ??? 
+--     id_empresa_dona INT NOT NULL,
 
-    CONSTRAINT fk_empresa_dona FOREIGN KEY (id_empresa_dona) REFERENCES empresas(id) ON DELETE CASCADE ON UPDATE CASCADE
-);
+--     CONSTRAINT fk_empresa_dona FOREIGN KEY (id_empresa_dona) REFERENCES empresas(id) ON DELETE CASCADE ON UPDATE CASCADE
+-- );
 
 
 CREATE TABLE postes (
@@ -49,4 +49,14 @@ CREATE TABLE notificacoes (
 
     CONSTRAINT fk_poste_associado FOREIGN KEY (id_poste_associado) REFERENCES postes(id) ON DELETE CASCADE ON UPDATE CASCADE
 );
+
+CREATE TABLE empresas_associadas_postes (
+    id_poste INT NOT NULL,
+    id_empresa INT NOT NULL,
+
+    PRIMARY KEY (id_poste, id_empresa),
+    CONSTRAINT fk_poste FOREIGN KEY (id_poste) REFERENCES postes(id) ON DELETE CASCADE ON UPDATE CASCADE,
+    CONSTRAINT fk_empresa FOREIGN KEY (id_empresa) REFERENCES empresas(id) ON DELETE CASCADE ON UPDATE CASCADE
+);
+
 

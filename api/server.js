@@ -82,19 +82,17 @@ app.post('/cadastroempresa', async (req, res) => {
 
 
 // Login empresa
-app.post('/loginEmpresas', async (req, res) => {
+app.post('/loginempresas', async (req, res) => {
   try {
     console.log(req.body);
-    // const { email, senha } = req.body;
-    //  DEBUG PARA NÃO DAR PROBLEMA!
-    let email = 'drag@isada.com';
-    let senha = '1234';
+    const { email, senha } = req.body;
+
     console.log(req.body);
     if (!email || !senha) return res.status(400).json({ erro: 1, mensagem: 'email, senha obrigatórios' });
 
     const empresa = await db.oneOrNone('SELECT * FROM empresas WHERE email = $1', [email]);
 
-    if (!empresa) return res.status(401).json({ erro: 2, mensagem: 'Email ou código incorreto.' });
+    if (!empresa) return res.status(401).json({ erro: 2, mensagem: 'Email incorreto.' });
 
     if (senha !== empresa.senha) return res.status(401).json({ erro: 2, mensagem: 'Senha incorreta.' });
 
@@ -115,16 +113,17 @@ app.post('/loginEmpresas', async (req, res) => {
 
 // Criar notificação (ABERTO)
 app.post('/criarnotificacao', async (req, res) => {
+  console.log(req.body);
   try {
-    const { texto, status = INTEGER, id_do_poste } = req.body;
+    const { descricao, status, id_poste_associado } = req.body;
 
-    if (!texto || !id_do_poste) {
-      return res.status(400).json({ erro: 1, mensagem: 'texto e id_do_poste obrigatórios' });
+    if (!descricao || !id_poste_associado) {
+      return res.status(400).json({ erro: 1, mensagem: 'descricao e id_poste_associado obrigatórios' });
     }
 
     const nova = await db.one(
-      'INSERT INTO notificacoes (texto, status, id_do_poste) VALUES ($1, $2, $3,) RETURNING *',
-      [texto, status, id_do_poste]
+      'INSERT INTO notificacoes (descricao, status, id_poste_associado) VALUES ($1, $2, $3) RETURNING *',
+      [descricao, status, id_poste_associado]
     );
 
     res.status(201).json({ resposta: 'Notificação criada com sucesso!', notificacao: nova });
@@ -132,6 +131,7 @@ app.post('/criarnotificacao', async (req, res) => {
     console.error('notificacoes create error:', error);
     res.status(500).json({ erro: 1, mensagem: 'Não foi possível criar notificação', detalhe: error.message });
   }
+
 });
 
 // Editar notificação (ABERTO)
@@ -175,13 +175,13 @@ app.delete('/deletarnotificacao/:id', async (req, res) => {
 });
 
 // Listar notificações de um poste (ABERTO)
-app.get('/postes/:id/notificacoes', async (req, res) => {
+app.get('/postes/notificacoes', async (req, res) => {
   try {
-    const { id } = req.params;
+    const { id_poste } = req.body;
 
     const rows = await db.any(
-      'SELECT id, texto, data, status FROM notificacoes WHERE id_do_poste = $1 ORDER BY data DESC',
-      [id]
+      'SELECT * FROM notificacoes WHERE id_poste_associado = $1 ORDER BY data DESC',
+      [id_poste]
     );
 
     res.json(rows);
@@ -192,12 +192,12 @@ app.get('/postes/:id/notificacoes', async (req, res) => {
 });
 
 //Listar todos os postes
-app.get('/postes', async (req, res) => {
+app.post('/mapa/postes', async (req, res) => {
   try {
-    
-    const postes = await db.any('SELECT * FROM postes');
+    const {id_empresa} = req.body;
+    const postes = await db.any('SELECT DISTINCT p.* FROM postes p LEFT JOIN empresas_associadas_postes eap ON p.id = eap.id_poste WHERE p.id_empresa_dona = $1 OR eap.id_empresa = $1;', [id_empresa]);
 
-    res.status(201).json(postes);
+    res.status(200).json(postes);
   } catch (error) {
     console.error('Erro ao pegar poste:', error);
     res.status(500).json({ erro: 1, mensagem: 'Erro interno ao pegar poste.' });
@@ -216,8 +216,9 @@ app.get('/nomeEmpresas', async (req, res) => {
   }
 });
 
+
 // Criar um novo poste (qualquer um autenticado pode criar)
-app.post('/postesCriar', autenticarToken, async (req, res) => {
+app.post('/postesCriar', async (req, res) => {
   try {
     const { latitude, longitude, empresa_id, status } = req.body;
 
@@ -226,8 +227,8 @@ app.post('/postesCriar', autenticarToken, async (req, res) => {
     }
 
     const novoPoste = await db.one(
-      'INSERT INTO postes (latitude, longitude, empresa_id, status) VALUES ($1, $2, $3, $4) RETURNING *',
-      [latitude, longitude, empresa_id, status || 'ativo']
+      'INSERT INTO postes (lat, lng, id_empresa_dona, status) VALUES ($1, $2, $3, $4) RETURNING *',
+      [latitude, longitude, empresa_id, status]
     );
 
     res.status(201).json(novoPoste);
@@ -262,11 +263,11 @@ app.put('/postes/:id', autenticarToken, async (req, res) => {
 });
 
 // Deletar um poste (qualquer um autenticado pode deletar)
-app.delete('/postes/:id', autenticarToken, async (req, res) => {
+app.delete('/postes/:id', async (req, res) => {
   try {
     const { id } = req.params;
 
-    const result = await db.result('DELETE FROM postes WHERE id = $1', [id]);
+    const result = await db.result('DELETE FROM postes WHERE id = $1 CASCADE' , [id]);
 
     if (result.rowCount === 0) {
       return res.status(404).json({ erro: 1, mensagem: 'Poste não encontrado.' });
@@ -280,7 +281,7 @@ app.delete('/postes/:id', autenticarToken, async (req, res) => {
 });
 
 // Pegar postes de uma empresa específica
-app.post('/postes', async (req, res) => {
+app.post('/empresa/postes', async (req, res) => {
   try {
     const { id_empresa } = req.body;
 
@@ -294,13 +295,16 @@ app.post('/postes', async (req, res) => {
 });
 
 // Pegar postes específico (geral)
-app.post('/empresa/postes', async (req, res) => {
+app.post('/postes', async (req, res) => {
+  
   try {
     const { id_poste } = req.body;
 
     const postes = await db.any('SELECT * FROM postes WHERE id = $1', [id_poste]);
 
-    res.json(postes);
+    const notificacoes = await db.any('SELECT * FROM notificacoes WHERE id_poste_associado IN ( SELECT id FROM postes WHERE id = $1)', [id_poste]);
+
+    res.json( notificacoes);
   } catch (error) {
     console.error('Erro ao pegar postes da empresa:', error);
     res.status(500).json({ erro: 1, mensagem: 'Erro interno ao pegar postes.' });
