@@ -15,16 +15,16 @@ INSERT INTO empresas (nome, codigo, cnpj, telefone, email, senha) VALUES ('Veria
 
 
 -- criando notificações para postes na empresa 1
-INSERT INTO notificacao ( posteAssociado, descricao, status) VALUES (1, 1, 'Ola mundo', 1);
-INSERT INTO notificacao ( posteAssociado, descricao, status) VALUES (2, 1, 'Ola mundo denovo!', 1);
-INSERT INTO notificacao ( posteAssociado, descricao, status) VALUES (3, 1, 'Ola mundo denovo denovo!', 1);
-
-INTO notificacao ( posteAssociado, descricao, status) VALUES (4, 4, 'Teste no 4', 1);
-INTO notificacao ( posteAssociado, descricao, status) VALUES (5, 6, 'Onibus bateu forte, ix', 1);
+INSERT INTO notificacoes ( id_poste_associado, descricao, status) VALUES (1, 'Ola mundo', 1);
+INSERT INTO notificacoes ( id_poste_associado, descricao, status) VALUES (2, 'Ola mundo denovo!', 1);
+INSERT INTO notificacoes ( id_poste_associado, descricao, status) VALUES (3, 'Ola mundo denovo denovo!', 1);
+INSERT INTO notificacoes ( id_poste_associado, descricao, status) VALUES (1, 'Teste no 4', 1);
+INSERT INTO notificacoes ( id_poste_associado, descricao, status) VALUES (1, 'Onibus bateu forte, ix', 1);
 
 
 -- Criar postes
 INSERT INTO postes (lat, lng, id_empresa_dona, status) VALUES (-27.432, -52.423, 1, 1);
 INSERT INTO postes (lat, lng, id_empresa_dona, status) VALUES (0, 0, 2, 1);
+INSERT INTO postes (lat, lng, id_empresa_dona, status) VALUES (1, 1, 2, 1);
 
 
