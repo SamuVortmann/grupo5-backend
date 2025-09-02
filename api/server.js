@@ -205,7 +205,7 @@ app.get('/postes', async (req, res) => {
 });
 
 // Criar um novo poste (qualquer um autenticado pode criar)
-app.post('/postes', autenticarToken, async (req, res) => {
+app.post('/postesCriar', autenticarToken, async (req, res) => {
   try {
     const { latitude, longitude, empresa_id, status } = req.body;
 
@@ -268,14 +268,11 @@ app.delete('/postes/:id', autenticarToken, async (req, res) => {
 });
 
 // Pegar postes de uma empresa específica
-app.get('/postes/:id_empresa', async (req, res) => {
+app.post('/postes', async (req, res) => {
   try {
-    const { id_empresa } = req.params;
+    const { id_empresa } = req.body;
 
-    const postes = await db.any(
-      'SELECT * FROM postes WHERE empresa_id = $1 ORDER BY id DESC',
-      [id_empresa]
-    );
+    const postes = await db.any('SELECT * FROM postes WHERE id_empresa_dona = $1', [id_empresa]);
 
     res.json(postes);
   } catch (error) {
@@ -288,16 +285,10 @@ app.get('/postes/:id_empresa', async (req, res) => {
 // Pegar todas as notificações de todos os postes de uma empresa
 app.post('/notificacoes', async (req, res) => {
   try {
-    const { id_empresa } = req.params;
+    const { id_empresa } = req.body;
+    console.log(req.body)
 
-    const notificacoes = await db.any(`
-      SELECT *
-      FROM notificacoes
-      WHERE id_poste_associado IN (
-      SELECT id
-      FROM postes
-      WHERE id_empresa_dona= ${id_empresa}
-      `);
+    const notificacoes = await db.any('SELECT * FROM notificacoes WHERE id_poste_associado IN ( SELECT id FROM postes WHERE id_empresa_dona = $1)', [id_empresa]);
 
     res.json(notificacoes);
   } catch (error) {
@@ -308,12 +299,14 @@ app.post('/notificacoes', async (req, res) => {
 
 
 // Pegar notificações de um poste específico
-app.get('/postes/:id_poste/notificacoes', async (req, res) => {
+app.post('/postes/notificacoes', async (req, res) => {
+  
   try {
-    const { id_poste } = req.params;
+    const { id_poste } = req.body;
+    console.log(req.body)
 
     const notificacoes = await db.any(
-      'SELECT * FROM notificacoes WHERE id_do_poste = $1 ORDER BY data DESC',
+      'SELECT * FROM notificacoes WHERE id_poste_associado = $1 ORDER BY data DESC',
       [id_poste]
     );
 

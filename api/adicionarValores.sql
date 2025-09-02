@@ -13,6 +13,11 @@ INSERT INTO empresas (nome, codigo, cnpj, telefone, email, senha) VALUES ('Veria
 -- empresa_logada.__postes[3].adicionarConexcao(empresa_logada.__postes[4])
 -- empresa_logada.__postes[0].adicionarEmpresaAssociadas("LaRa's Corp", 'Internet');
 
+-- Criar postes
+INSERT INTO postes (lat, lng, id_empresa_dona, status) VALUES (-27.432, -52.423, 1, 1);
+INSERT INTO postes (lat, lng, id_empresa_dona, status) VALUES (0, 0, 2, 1);
+INSERT INTO postes (lat, lng, id_empresa_dona, status) VALUES (1, 1, 2, 1);
+INSERT INTO postes (lat, lng, id_empresa_dona, status) VALUES (-27.432, -52.423, 1, 1);
 
 -- criando notificações para postes na empresa 1
 INSERT INTO notificacoes ( id_poste_associado, descricao, status) VALUES (1, 'Ola mundo', 1);
@@ -22,9 +27,5 @@ INSERT INTO notificacoes ( id_poste_associado, descricao, status) VALUES (1, 'Te
 INSERT INTO notificacoes ( id_poste_associado, descricao, status) VALUES (1, 'Onibus bateu forte, ix', 1);
 
 
--- Criar postes
-INSERT INTO postes (lat, lng, id_empresa_dona, status) VALUES (-27.432, -52.423, 1, 1);
-INSERT INTO postes (lat, lng, id_empresa_dona, status) VALUES (0, 0, 2, 1);
-INSERT INTO postes (lat, lng, id_empresa_dona, status) VALUES (1, 1, 2, 1);
 
 
