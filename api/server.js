@@ -69,14 +69,32 @@ async function podeAcessarPoste(poste_id, callerEmpresaId) {
 // Cadastro empresa
 app.post('/cadastroempresa', async (req, res) => {
   try {
-    const { nome, email, senha, cnpj, code } = req.body;
-    if (!nome || !email || !senha || !cnpj) return res.status(400).json({ erro: 1, mensagem: 'nome, email, senha e cnpj obrigatórios' });
+    // Campos esperados no corpo da requisição
+    const { nome, codigo, cnpj, telefone, email, senha } = req.body;
 
-    await db.none('INSERT INTO empresas (nome, email, senha, cnpj, code) VALUES ($1, $2, $3, $4, $5)', [nome, email, senha, cnpj, code || null]);
-    res.status(201).json({ resposta: 'Cadastro realizado com sucesso!' });
+    // Validação dos campos obrigatórios
+    if (!nome || !codigo || !cnpj || !email || !senha) {
+      return res.status(400).json({
+        erro: 1,
+        mensagem: 'nome, codigo, cnpj, email e senha são obrigatórios'
+      });
+    }
+
+    // Inserção no banco de dados
+    await db.none(
+      `INSERT INTO empresas (nome, codigo, cnpj, telefone, email, senha)
+       VALUES ($1, $2, $3, $4, $5, $6)`,
+      [nome, codigo, cnpj, telefone, email, senha]
+    );
+
+    res.status(201).json({ resposta: 'Cadastro realizado com sucesso!', bool: 1 });
   } catch (error) {
-    console.error('cadastroempr error:', error);
-    res.status(500).json({ erro: 1, mensagem: 'Não foi possível cadastrar a empresa', detalhe: error.message });
+    console.error('Erro ao cadastrar empresa:', error);
+    res.status(500).json({
+      erro: 1,
+      mensagem: 'Não foi possível cadastrar a empresa',
+      detalhe: error.message
+    });
   }
 });
 
@@ -102,6 +120,28 @@ app.post('/loginempresas', async (req, res) => {
   } catch (error) {
     console.error('loginEmpresas error:', error);
     res.status(500).json({ erro: 1, mensagem: 'Erro interno no servidor.', detalhe: error.message });
+  }
+});
+
+// Atualizar uma empresa -> o centro default dela
+app.put('/editarcentro', async (req, res) => {
+  try {
+    console.log(req.body);
+    const { lat, lng, zoom, id } = req.body;
+
+    const posteAtualizado = await db.oneOrNone(
+      'UPDATE empresas SET centro_lat=$1, centro_lng=$2, zoom=$3 WHERE id=$4 RETURNING *',
+      [lat, lng, zoom, id]
+    );
+
+    if (!posteAtualizado) {
+      return res.status(404).json({ erro: 1, mensagem: 'Poste não encontrado.' });
+    }
+
+    res.json(posteAtualizado);
+  } catch (error) {
+    console.error('Erro ao atualizar poste:', error);
+    res.status(500).json({ erro: 1, mensagem: 'Erro interno ao atualizar poste.' });
   }
 });
 
@@ -134,15 +174,15 @@ app.post('/criarnotificacao', async (req, res) => {
 
 });
 
-// Editar notificação (ABERTO)
+// Editar notificação (ABERTO) // Apenas mudas status
 app.put('/editarnotificacao/:id', async (req, res) => {
   try {
     const { id } = req.params;
-    const { texto, status, data } = req.body;
+    const { status } = req.body;
 
     const result = await db.result(
-      'UPDATE notificacoes SET texto = $1, data = $2, status = $3 WHERE id = $4',
-      [texto, data || null, status, id]
+      'UPDATE notificacoes SET status = $1 WHERE id = $2',
+      [status, id]
     );
 
     if (result.rowCount === 0) {
@@ -216,6 +256,46 @@ app.get('/nomeEmpresas', async (req, res) => {
   }
 });
 
+// Pegar toda lista de associados
+app.get('/empresasassociadas', async (req, res) => {
+  try {
+    
+    const idNome = await db.any(`      
+    SELECT 
+      eap.id_poste,
+      e.nome AS nome_empresa_associada
+    FROM empresas_associadas_postes eap
+    JOIN empresas e ON eap.id_empresa = e.id;
+
+      `);
+
+    res.status(200).json(idNome);
+  } catch (error) {
+    console.error('Erro ao pegar idNome:', error);
+    res.status(500).json({ erro: 1, mensagem: 'Erro interno ao pegar idNome.' });
+  }
+});
+
+// Criar uma nova ligação de poste associado
+app.post('/associar', async (req, res) => {
+  try {
+    const { id_poste, id_empresa } = req.body;
+
+    if (!id_poste || !id_empresa) {
+      return res.status(400).json({ erro: 1, mensagem: 'id_poste e id_empresa são obrigatórios.' });
+    }
+
+    const novoPoste = await db.one(
+      'INSERT INTO empresas_associadas_postes (id_poste, id_empresa) VALUES ($1, $2) RETURNING *',
+      [id_poste, id_empresa]
+    );
+
+    res.status(201).json(novoPoste);
+  } catch (error) {
+    console.error('Erro ao criar poste:', error);
+    res.status(500).json({ erro: 1, mensagem: 'Erro interno ao criar poste.' });
+  }
+});
 
 // Criar um novo poste (qualquer um autenticado pode criar)
 app.post('/postesCriar', async (req, res) => {
@@ -240,15 +320,15 @@ app.post('/postesCriar', async (req, res) => {
 
 
 
-// Atualizar um poste (qualquer um autenticado pode editar)
-app.put('/postes/:id', autenticarToken, async (req, res) => {
+// Atualizar um poste (qualquer um autenticado pode editar) -> apenas muda status
+app.put('/postes/:id', async (req, res) => {
   try {
     const { id } = req.params;
-    const { latitude, longitude, status, empresa_id } = req.body;
+    const {  status } = req.body;
 
     const posteAtualizado = await db.oneOrNone(
-      'UPDATE postes SET latitude=$1, longitude=$2, status=$3, empresa_id=$4 WHERE id=$5 RETURNING *',
-      [latitude, longitude, status, empresa_id, id]
+      'UPDATE postes SET status=$1 WHERE id=$2 RETURNING *',
+      [status, id]
     );
 
     if (!posteAtualizado) {
@@ -267,7 +347,7 @@ app.delete('/postes/:id', async (req, res) => {
   try {
     const { id } = req.params;
 
-    const result = await db.result('DELETE FROM postes WHERE id = $1 CASCADE' , [id]);
+    const result = await db.result('DELETE FROM postes WHERE id = $1' , [parseInt(id)]);
 
     if (result.rowCount === 0) {
       return res.status(404).json({ erro: 1, mensagem: 'Poste não encontrado.' });
@@ -326,9 +406,6 @@ app.post('/notificacoes', async (req, res) => {
     res.status(500).json({ erro: 1, mensagem: 'Erro interno ao pegar notificações.' });
   }
 });
-
-
-
 
 // Pegar notificações de um poste específico
 app.post('/postes/notificacoes', async (req, res) => {

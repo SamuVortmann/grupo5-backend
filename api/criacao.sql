@@ -10,22 +10,10 @@ CREATE TABLE empresas (
     telefone VARCHAR(30),
     email VARCHAR(150) NOT NULL,
     senha VARCHAR(150) NOT NULL,
-    zoom INT DEFAULT 10,
+    zoom INT DEFAULT 3,
     centro_lat VARCHAR(40) DEFAULT 0.0,
     centro_lng VARCHAR(40) DEFAULT 0.0
 );
-
--- Possível remoção
--- CREATE TABLE funcionarios (
---     id SERIAL PRIMARY KEY,
---     nome VARCHAR(150) NOT NULL,
---     senha VARCHAR(50) NOT NULL,
---     email VARCHAR(150) NOT NULL,
---     -- endereco ??? 
---     id_empresa_dona INT NOT NULL,
-
---     CONSTRAINT fk_empresa_dona FOREIGN KEY (id_empresa_dona) REFERENCES empresas(id) ON DELETE CASCADE ON UPDATE CASCADE
--- );
 
 
 CREATE TABLE postes (
